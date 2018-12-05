@@ -1,0 +1,42 @@
+#the black scholes model questions is described as
+#We are here interested in simulating the stock price at times t ∈ {0, 0.5, 1}, that is, in simulating the vector (S0, S0.5, S1). As seen in class, the numerical algorithm to simulate (S0, S0.5, S1) is
+#question1:Run this algorithm N = 250 times, and compute the mean of the values you obtain for S1,
+#question2:Consider a call option with strike K = 100 and maturity T = 1. Using the N = 250 simulations to compute π0 by Monte Carlo approximation
+#question3:Consider now an option with payoff (S0+S0.5+S1 − 100)+. Using the N = 250 simulations to compute π0 by Monte Carlo approximation
+
+#question1
+import math
+import numpy as np
+u=0.1
+r=0.1
+o=0.2
+S0=100
+T=1
+K=1
+N=250
+delt=0.5
+result_S05=np.array([])
+result_S1=np.array([])
+for i in range(N):
+    Z1 = np.random.randn()
+    Z2 = np.random.randn()
+    S05=S0*math.exp((u-o*o/2)*delt+o*math.sqrt(delt)*Z1 )
+    S1=S05*math.exp((u-o*o/2)*delt+o*math.sqrt(delt)*Z2 )
+    result_S05=np.append(result_S05,S05)
+    result_S1=np.append(result_S1,S1)
+
+S1=np.sum(result_S1)/N
+print(S1)
+
+
+#question2
+def ReLU(x):
+    return (x+abs(x))/2
+
+pai=math.exp(-0.1)*ReLU(result_S1-100).sum()/N
+print(pai)
+
+
+#question3
+pai2=math.exp(-0.1)*ReLU((result_S1+100+result_S05)/3-100).sum()/N
+print(pai2)
